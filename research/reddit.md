@@ -20,8 +20,6 @@ The `after` parameter allows clients to request additional records beyond the cu
 
 This suggests that Reddit provides a documented mechanism for retrieving multiple batches of data through its API.
 
-However, pagination has not been tested in practice.
-
 ## 3. Available Fields
 
 **Official Documentation:** Reddit's API provides structured data containing information about posts and comments.
@@ -32,7 +30,7 @@ Potentially useful fields include:
 - **Comments:** Comment ID (`id`), comment text (`body`), creation time (`created_utc`), score (`score`), and parent ID (`parent_id`).
 - **Discussion structure:** Relationships between posts, comments, and replies.
 
-These fields are identified from the API's documented data structure. Their availability and completeness have not been verified through actual API responses.
+These fields are identified from the API's documented data structure. 
 
 ## 4. Repeatability
 
@@ -90,7 +88,5 @@ Reddit is a potentially useful source of customer-generated feedback, including 
 Compared with Amazon's manually accessible review interface, Reddit provides a documented API with structured data and cursor-based pagination.
 
 However, the availability of an official API does not establish that the project has permission to use it.
-
-**Current assessment:** Reddit is technically promising as a potential customer feedback source, but practical accessibility, repeatability, and authorized automated ingestion have not yet been validated.
 
 Further testing would require appropriate API access and commercial-use authorization. Until then, Reddit should remain a candidate source rather than a validated ingestion source.
