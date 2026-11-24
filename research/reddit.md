@@ -1,58 +1,8 @@
 # Reddit — Data Source Feasibility Assessment
 
-## 1. Accessibility
+## 1. Official API and Usage Restrictions
 
-**Official Documentation:** Reddit provides a Data API that allows approved developers to access posts and comments programmatically.
-
-API access requires authorization and OAuth authentication. Commercial use requires explicit permission from Reddit.
-
-**Manual Testing:** Not performed.
-
-**Automated Testing:** Not performed because approved API access and commercial-use authorization are not currently available for this project.
-
-Therefore, the accessibility of Reddit data for an automated ingestion workflow remains unverified.
-
-## 2. Pagination
-
-**Official Documentation:** Reddit's listing endpoints support cursor-based pagination using parameters such as `after`, `before`, and `limit`.
-
-The `after` parameter allows clients to request additional records beyond the current batch.
-
-This suggests that Reddit provides a documented mechanism for retrieving multiple batches of data through its API.
-
-## 3. Available Fields
-
-**Official Documentation:** Reddit's API provides structured data containing information about posts and comments.
-
-Potentially useful fields include:
-
-- **Posts:** Post ID (`id`), title (`title`), post text (`selftext`), subreddit (`subreddit`), creation time (`created_utc`), and score (`score`).
-- **Comments:** Comment ID (`id`), comment text (`body`), creation time (`created_utc`), score (`score`), and parent ID (`parent_id`).
-- **Discussion structure:** Relationships between posts, comments, and replies.
-
-These fields are identified from the API's documented data structure. 
-
-## 4. Repeatability
-
-**Official Documentation:** Reddit provides structured API endpoints that support programmatic requests and pagination.
-
-However, no automated retrieval test has been performed.
-
-It has not been verified whether the same posts and comments can be consistently retrieved across multiple requests or at different times.
-
-Therefore, repeatability remains unverified.
-
-## 5. Sufficient Useful Text
-
-Reddit discussions may contain useful customer-generated text for sentiment analysis, including product experiences, complaints, suggestions, comparisons, and recurring issues.
-
-Post content and comment threads may provide more detailed customer feedback than numerical ratings alone.
-
-However, no actual text samples have been retrieved or evaluated in this assessment.
-
-Therefore, the quantity and relevance of text available through an authorized automated method remain unverified.
-
-## 6. Official API and Usage Restrictions
+### 1.1 Reddit Data API
 
 **Official Documentation:**
 
@@ -61,32 +11,171 @@ Therefore, the quantity and relevance of text available through an authorized au
 - https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data
 - https://redditinc.com/policies/data-api-terms
 
-Reddit provides an official Data API for programmatic access to posts, comments, and other Reddit content.
+Reddit provides an official Data API for programmatic access to posts, comments, subreddits, and related information.
 
-Access requires approved API credentials and OAuth authentication.
+Its documented capabilities include:
 
-Commercial use requires explicit permission from Reddit. API access is also subject to rate limits and restrictions on data collection, storage, redistribution, and certain AI-related uses.
+- Retrieving subreddit post listings
+- Retrieving post details and comment trees
+- Searching for posts
+- Accessing structured post and comment data
+- Cursor-based pagination for listing endpoints
+
+**Authentication and access requirements:**
+
+- Reddit requires registered OAuth authentication for Data API clients.
+- API access is subject to approval and applicable developer policies.
+- Commercial use requires explicit permission from Reddit.
+
+**Rate limits:**
+
+Reddit's Data API documentation specifies a limit of 100 queries per minute per OAuth client ID for eligible free-access users, averaged over a 10-minute window.
+
+Relevant response headers include:
+
+- `X-Ratelimit-Used`
+- `X-Ratelimit-Remaining`
+- `X-Ratelimit-Reset`
+
+These limits do not establish that this project qualifies for free access.
+
+**Data usage restrictions:**
+
+Reddit imposes restrictions on data collection, storage, redistribution, and certain AI-related uses.
+
+Stored content must be handled in accordance with Reddit's deletion requirements, including removal of content deleted from Reddit.
+
+**Assessment:** The Data API provides a documented technical mechanism for structured data retrieval, but its suitability for this commercial project depends on authorization.
+
+### 1.2 Reddit Developer Platform
+
+**Official Documentation:**
+
+- https://developers.reddit.com/
+- https://developers.reddit.com/docs/capabilities/server/reddit-api
+
+Reddit also provides a Developer Platform for building applications and integrations within Reddit's ecosystem.
+
+The platform provides developer tools and supported methods for interacting with Reddit data.
+
+However, Developer Platform capabilities and permissions do not independently authorize unrestricted external collection of Reddit content for commercial analytics.
+
+**Assessment:** Potentially useful for Reddit-integrated applications, but not a confirmed alternative to obtaining appropriate Data API permissions for this ingestion project.
+
+### 1.3 Reddit for Researchers
+
+**Official Documentation:**
+
+- https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data
+
+Reddit provides a separate Reddit for Researchers program for eligible research use cases.
+
+This program is distinct from standard developer access and has its own eligibility and approval requirements.
+
+**Assessment:** Not an assumed access route for Sciencia AI's commercial ingestion project.
+
+### 1.4 Automated Data Collection Restrictions
+
+The ability to view Reddit content publicly does not establish permission to collect it automatically.
+
+Automated collection must comply with Reddit's developer policies, access requirements, and applicable data-use terms.
 
 For this assessment, no approved API access or commercial-use authorization is assumed to be available.
 
-Therefore, the official API has not been tested.
+## 2. Accessibility
+
+**Manual Testing:** I tested Reddit accessibility using a discussion in r/iphone while logged out.
+
+I was able to access the post and read full-length comments without logging in.
+
+The website also allowed me to view additional comments through its interface.
+
+**Official API Documentation:** Reddit provides programmatic access to posts and comments through its Data API for approved clients using OAuth authentication.
+
+**Not Verified:** Authorized automated accessibility for this project.
+
+## 3. Pagination
+
+**Manual Testing:** Reddit provided a button for loading additional comments.
+
+I was able to load and view more comments without logging in.
+
+This confirms that additional comments could be accessed through the website's manual interface.
+
+**Official API Documentation:** Reddit's listing endpoints support cursor-based pagination using `after`, `before`, and `limit`.
+
+Listing responses can contain an `after` cursor for requesting the next batch of records.
+
+Post comment trees are accessed through comment-related endpoints and may require separate handling for additional replies.
+
+**Not Verified:** Actual API pagination and repeated retrieval of multiple batches.
+
+## 4. Available Fields
+
+**Manual Testing:** The following information was observed on Reddit's website, not retrieved through an API.
+
+**Post-level information:**
+
+- Post title
+- Post body
+- Subreddit name
+
+**Comment-level information:**
+
+- Reviewer username
+- Comment text
+- Comment timestamp (relative time and exact date/time displayed on hover)
+- Comment score and voting controls
+- Nested replies and parent-child discussion structure
+- Reply, Award, and Share options
+- User profile images
+
+The inspected discussion displayed multiple comments, including direct replies to other comments. This demonstrates that Reddit provides conversational context rather than only independent reviews.
+
+**Official API Documentation:**
+
+Potentially useful structured fields include:
+
+- **Posts:** `id`, `title`, `selftext`, `subreddit`, `created_utc`, and `score`.
+- **Comments:** `id`, `body`, `created_utc`, `score`, and `parent_id`.
+- **Discussion structure:** Relationships between posts, comments, and nested replies.
+
+These fields are identified from Reddit's documented data model. Their availability and completeness have not been verified through actual API responses for this project.
+
+## 5. Repeatability
+
+**Manual Testing:** I reopened the same Reddit post and was able to access previously viewed content again without logging in.
+
+This indicates that manual access was repeatable under the tested conditions.
+
+**Official API Documentation:** Reddit provides structured API endpoints that support programmatic requests.
+
+However, content may change over time because of new comments, edits, deletions, or moderation.
+
+## 6. Sufficient Useful Text
+
+**Manual Testing:** Full-length user comments were accessible without authentication.
+
+The inspected discussion contained user opinions and responses concerning an iPhone-related topic.
+
+Some comments were short reactions, while others formed part of a discussion thread. This suggests that Reddit may provide useful qualitative feedback, although the relevance and depth of individual comments can vary.
+
+**Official API Documentation:** Reddit provides post and comment text fields, including `selftext` and `body`.
+
+**Not Verified:** The quantity and relevance of text available through an authorized automated method. A representative sample has not yet been systematically evaluated.
 
 ## 7. Login / CAPTCHA / Verification
 
-**Official Documentation:** OAuth authentication is required for Reddit Data API access.
+**Manual Testing:**
 
-**Manual Testing:** Not performed.
+- **Login:** Not required to view the tested post and comments.
+- **CAPTCHA:** Not encountered.
+- **Additional verification:** Not encountered.
+- **Pagination:** Additional comments were accessible without authentication.
+- **Repeated access:** Previously viewed content remained accessible when the post was reopened.
 
-**Automated Testing:** Not performed.
+**Official API Documentation:** OAuth authentication is required for Reddit Data API access.
 
-No conclusion can be drawn about CAPTCHA challenges or additional verification requirements during actual retrieval.
+Reddit should therefore remain a candidate source rather than a validated recurring ingestion source.
 
-## 8. Preliminary Conclusion
-
-Reddit is a potentially useful source of customer-generated feedback, including product discussions, complaints, suggestions, and user experiences.
-
-Compared with Amazon's manually accessible review interface, Reddit provides a documented API with structured data and cursor-based pagination.
-
-However, the availability of an official API does not establish that the project has permission to use it.
-
-Further testing would require appropriate API access and commercial-use authorization. Until then, Reddit should remain a candidate source rather than a validated ingestion source.
+Automated accessibility, repeatability, and the volume of retrievable text remain unverified.
